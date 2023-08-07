@@ -1,5 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai';
 
+//not being used anymore
 const dalle_styles = {
   "normal": {
       "instruction": ""

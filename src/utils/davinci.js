@@ -43,6 +43,7 @@ const chatbot_behaviors = {
   }
 }
 
+
 export const davinci = async (prompt, key, selectedStyle) => {
   const configuration = new Configuration({
     apiKey: key,

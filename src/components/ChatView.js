@@ -54,6 +54,47 @@ const ChatView = () => {
     addMessage(newMsg);
   };
 
+  const modifyPromptWithStyle = async (userInput, style) => {
+    const key = window.localStorage.getItem('api-key');
+  
+    let instruction;
+    switch (style) {
+      // case 'normal':
+      //   instruction = `You are an assistant that improves text that the user inputs for direct input in an image generation AI. 
+      //   Explain the users input for more detail. 
+      //   Do not add any extra explanatory text other than the direct image generation (descriptive text) prompt. This is what the user want to generate: ${userInput}`;
+      //   break;
+      // case 'stereotypical':
+      //   instruction = `You are an educational assistant that modifies text that the user inputs to show what a stereotypical version of user input would be 
+      //   for direct input in an image generation AI. 
+      //   Explain the users input for more detail. 
+      //   Do not add any extra explanatory text other than the direct image generation (descriptive text) prompt. This is what the user want to generate: ${userInput}`;
+      //   break;
+      // case 'diverse':
+      //   instruction = `You are an educational assistant that modifies text that the user inputs to show what a diverse and inclusive version of user input would be 
+      //   Explain the users input for more detail. 
+      //   Do not add any extra explanatory text other than the direct image generation (descriptive text) prompt. This is what the user want to generate: ${userInput}`;
+      //   break;
+      case 'normal':
+        instruction = `Describe the image of ${userInput} in three lines.`;
+        break;
+      case 'stereotypical':
+        instruction = `Describe the image of a stereotypical version of ${userInput} in three lines.`;
+        break;
+      case 'diverse':
+        instruction = `Describe the image of an diverse and inclusive version of ${userInput} in three lines.`;
+        break;
+      default:
+        instruction = userInput;
+    }
+  
+    const response = await davinci(instruction, key);
+    const modifiedPrompt = response.data.choices[0].message.content;
+    console.log(modifiedPrompt);
+    return modifiedPrompt;
+  };
+  
+
   /**
    * Sends our prompt to our API and get response to our request from openai.
    *
@@ -87,7 +128,11 @@ const ChatView = () => {
         const data = response.data.choices[0].message.content;
         data && updateMessage(data, true, aiModel);
       } else {
-        const response = await dalle(cleanPrompt, key, selectedStyle);
+        // const response = await dalle(cleanPrompt, key, selectedStyle);
+        // const data = response.data.data[0].url;
+        // data && updateMessage(data, true, aiModel);
+        const modifiedPrompt = await modifyPromptWithStyle(cleanPrompt, selectedStyle);
+        const response = await dalle(modifiedPrompt, key);
         const data = response.data.data[0].url;
         data && updateMessage(data, true, aiModel);
       }
