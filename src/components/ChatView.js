@@ -21,6 +21,11 @@ const ChatView = () => {
   const [selected, setSelected] = useState(options[0]);
   const [messages, addMessage] = useContext(ChatContext);
   const [modalOpen, setModalOpen] = useState(false);
+  // Style options and state
+  const chatbotStyleOptions = ['woke', 'stereotypical', 'fact_checking', 'correct_response', 'science_denialism' , 'scientism', 'dogmatic_conservatism', 'radical_progressivism', 'far_left', 'far_right']; 
+  const dalleStyleOptions = ['normal', 'stereotypical', 'diverse'];
+  const [styleOptions, setStyleOptions] = useState(selected === options[0] ? chatbotStyleOptions : dalleStyleOptions);
+  const [selectedStyle, setSelectedStyle] = useState(styleOptions[0]);
 
   /**
    * Scrolls the chat area to the bottom.
@@ -29,22 +34,23 @@ const ChatView = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const updateMessage = (newValue, ai = false, selected, selectedStyle) => {
+  const id = Date.now() + Math.floor(Math.random() * 1000000);
+
   /**
    * Adds a new message to the chat.
    *
    * @param {string} newValue - The text of the new message.
    * @param {boolean} [ai=false] - Whether the message was sent by an AI or the user.
    */
-  const updateMessage = (newValue, ai = false, selected) => {
-    const id = Date.now() + Math.floor(Math.random() * 1000000);
     const newMsg = {
       id: id,
       createdAt: Date.now(),
       text: newValue,
       ai: ai,
       selected: `${selected}`,
+      style: `${selectedStyle}`, // Include selectedStyle in the message object
     };
-
     addMessage(newMsg);
   };
 
@@ -77,11 +83,11 @@ const ChatView = () => {
     console.log(selected);
     try {
       if (aiModel === options[0]) {
-        const response = await davinci(cleanPrompt, key);
+        const response = await davinci(cleanPrompt, key, selectedStyle);
         const data = response.data.choices[0].message.content;
         data && updateMessage(data, true, aiModel);
       } else {
-        const response = await dalle(cleanPrompt, key);
+        const response = await dalle(cleanPrompt, key, selectedStyle);
         const data = response.data.data[0].url;
         data && updateMessage(data, true, aiModel);
       }
@@ -99,6 +105,16 @@ const ChatView = () => {
     }
   };
 
+  useEffect(() => {
+    if (selected === options[0]) {
+      setStyleOptions(chatbotStyleOptions);
+      setSelectedStyle(chatbotStyleOptions[0]); // Reset selected style
+    } else {
+      setStyleOptions(dalleStyleOptions);
+      setSelectedStyle(dalleStyleOptions[0]); // Reset selected style
+    }
+  }, [selected]);
+  
   /**
    * Scrolls the chat area to the bottom when the messages array is updated.
    */
@@ -131,6 +147,14 @@ const ChatView = () => {
           className='dropdown'>
           <option>{options[0]}</option>
           <option>{options[1]}</option>
+        </select>
+        <select
+          value={selectedStyle}
+          onChange={(e) => setSelectedStyle(e.target.value)}
+          className='dropdown'>
+          {styleOptions.map((option) => (
+            <option key={option}>{option}</option>
+          ))}
         </select>
         <div className='flex items-stretch justify-between w-full'>
           <textarea

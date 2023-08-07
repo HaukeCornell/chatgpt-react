@@ -42,9 +42,9 @@ const Setting = ({ modalOpen, setModalOpen }) => {
     <form
       onSubmit={saveKey}
       className='flex flex-col items-center justify-center gap-2'>
-      <p className='text-lg font-semibold'>Use your own API-key.</p>
-      <p>keys are saved in your own browser</p>
-      <p className='italic'>
+      <p className='text-lg font-semibold'>Enter the supplied API-key</p>
+      <p>Keys are saved in your own browser</p>
+      {/* <p className='italic'>
         Get OpenAI API key{' '}
         <a
           className='text-blue-600'
@@ -54,7 +54,7 @@ const Setting = ({ modalOpen, setModalOpen }) => {
           here
         </a>
         .
-      </p>
+      </p> */}
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
