@@ -70,30 +70,6 @@ const SideBar = () => {
 
       <div className='nav__bottom'>
         <DarkMode open={open} />
-        <div className='nav'>
-          <a
-            href='https://www.buymeacoffee.com/kevrooz'
-            rel='noreferrer'
-            target='_blank'
-            className='nav__item'>
-            <div className='nav__icons'>
-              <MdOutlineCoffee />
-            </div>
-            <h1 className={`${!open && 'hidden'}`}>Support Kevin</h1>
-          </a>
-        </div>
-        <div className='nav'>
-          <a
-            rel='noreferrer'
-            target='_blank'
-            href='https://github.com/KevinRoozrokh/chatgpt-dalle'
-            className='nav__item'>
-            <div className='nav__icons'>
-              <AiOutlineGithub />
-            </div>
-            <h1 className={`${!open && 'hidden'}`}>Github</h1>
-          </a>
-        </div>
         <div onClick={() => setModalOpen(true)} className='nav'>
           <span htmlFor='setting-modal' className='nav__item'>
             <div className='nav__icons'>
